@@ -10,7 +10,7 @@ status](https://codecov.io/gh/lorenzwalthert/KerasMisc/branch/master/graph/badge
 # KerasMisc
 
 The goal of KerasMisc is to provide a collection of tools that enhance
-Keras. Currently, the package features:
+the R implementation of Keras. Currently, the package features:
 
   - a Keras callback for cyclical learning rate scheduling as proposed
     by [Smith (2017)](https://arxiv.org/abs/1506.01186), closely adapted
@@ -18,6 +18,8 @@ Keras. Currently, the package features:
     Please see the [README](https://github.com/bckenstler/CLR) from the
     Python implementation for details. It’s really almost a 1:1
     translation.
+
+Contributions welcome.
 
 ## Installation
 
