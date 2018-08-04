@@ -15,4 +15,10 @@ Roxygen: list(
 RoxygenNote: 6.1.0
 Imports: 
     R6,
-    keras
+    keras,
+    checkmate,
+    tensorflow
+Suggests: 
+    testthat
+URL: https://github.com/lorenzwalthert/KerasMisc
+BugReports: https://github.com/lorenzwalthert/KerasMisc/issues
