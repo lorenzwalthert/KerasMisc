@@ -1,6 +1,14 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
+[![lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+
+[![Travis build
+status](https://travis-ci.org/lorenzwalthert/KerasMisc.svg?branch=master)](https://travis-ci.org/lorenzwalthert/KerasMisc)
+
+[![Coverage
+status](https://codecov.io/gh/lorenzwalthert/KerasMisc/branch/master/graph/badge.svg)](https://codecov.io/github/lorenzwalthert/KerasMisc?branch=master)
+
 # KerasMisc
 
 The goal of KerasMisc is to provide a collection of tools that enhance
