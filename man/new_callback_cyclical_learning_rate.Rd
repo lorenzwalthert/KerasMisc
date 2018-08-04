@@ -37,8 +37,8 @@ start of cycle). Default is "cycle".}
 \description{
 This callback implements a cyclical learning rate policy (CLR).
 The method cycles the learning rate between two boundaries with
-some constant frequency, as detailed in this paper
-(https://arxiv.org/abs/1506.01186).
+some constant frequency, as detailed in
+\href{https://arxiv.org/abs/1506.01186}{this paper}.
 }
 \details{
 The amplitude of the cycle can be scaled on a per-iteration or per-cycle

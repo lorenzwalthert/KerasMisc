@@ -2,8 +2,8 @@
 #'
 #' This callback implements a cyclical learning rate policy (CLR).
 #' The method cycles the learning rate between two boundaries with
-#' some constant frequency, as detailed in this paper
-#' (https://arxiv.org/abs/1506.01186).
+#' some constant frequency, as detailed in
+#' [this paper](https://arxiv.org/abs/1506.01186).
 #'
 #' @details
 #' The amplitude of the cycle can be scaled on a per-iteration or per-cycle
@@ -36,8 +36,46 @@
 #'   start of cycle). Default is "cycle".
 #' @family callbacks
 #' @export
-new_callback_cyclical_learning_rate <- function(base_lr = 0.001,
-                                                max_lr = 0.006,
+#' @example
+#' library(keras)
+#' dataset <- dataset_boston_housing()
+#' c(c(train_data, train_targets), c(test_data, test_targets)) %<-% dataset
+#'
+#' mean <- apply(train_data, 2, mean)
+#' std <- apply(train_data, 2, sd)
+#' train_data <- scale(train_data, center = mean, scale = std)
+#' test_data <- scale(test_data, center = mean, scale = std)
+#'
+#'
+#' model <- keras_model_sequential() %>%
+#'   layer_dense(
+#'     units = 64, activation = "relu",
+#'     input_shape = dim(train_data)[[2]]
+#'   ) %>%
+#'   layer_dense(units = 64, activation = "relu") %>%
+#'   layer_dense(units = 1)
+#' model %>% compile(
+#'   optimizer = optimizer_rmsprop(lr = 0.001),
+#'   loss = "mse",
+#'   metrics = c("mae")
+#' )
+#'
+#' callback_clr <- new_callback_cyclical_learning_rate(
+#'   step_size = 32,
+#'   base_lr = 0.001,
+#'   max_lr = 0.006,
+#'   gamma = 0.99,
+#'   mode = "exp_range"
+#' )
+#' model %>% fit(
+#'   train_data, train_targets,
+#'   validation_data = list(test_data, test_targets),
+#'   epochs = 10, verbose = 1,
+#'   callbacks = list(callback_clr)
+#' )
+#' callback_clr$history
+#' plot_clr_history(callback_clr)
+new_callback_cyclical_learning_rate <- function(base_lr = 0.001,                                                 max_lr = 0.006,
                                                 step_size = 2000,
                                                 mode = "triangular",
                                                 gamma = 1,
@@ -68,6 +106,7 @@ CyclicLR <- R6::R6Class("CyclicLR",
     clr_iterations = NULL,
     trn_iterations = NULL,
     history = NULL,
+    trn_epochs = NULL,
 
     initialize = function(base_lr = 0.001,
                           max_lr = 0.006,
@@ -76,6 +115,16 @@ CyclicLR <- R6::R6Class("CyclicLR",
                           gamma = 1,
                           scale_fn = NULL,
                           scale_mode = "cycle") {
+
+      assert_CyclicLR_init(
+        base_lr,
+        max_lr,
+        step_size,
+        mode,
+        gamma,
+        scale_fn,
+        scale_mode
+      )
 
       self$base_lr <- base_lr
       self$max_lr <- max_lr
@@ -100,6 +149,7 @@ CyclicLR <- R6::R6Class("CyclicLR",
       }
       self$clr_iterations <- 0
       self$trn_iterations <- 0
+      self$trn_epochs <- 1
       self$history <- data.frame()
       self$.reset()
     },
@@ -143,17 +193,45 @@ CyclicLR <- R6::R6Class("CyclicLR",
       }
     },
     on_batch_end = function(batch, logs = list()) {
-      self$trn_iterations <- self$trn_iterations + 1
-      self$clr_iterations <- self$clr_iterations + 1
-      k_set_value(self$model$optimizer$lr, self$clr())
-
       new_history <- data.frame(
         lr = k_get_value(self$model$optimizer$lr),
-        iterations = self$trn_iterations
+        iterations = self$trn_iterations,
+        epochs = self$trn_epochs
       )
       self$history <- rbind(
         self$history, new_history
       )
+      self$trn_iterations <- self$trn_iterations + 1
+      self$clr_iterations <- self$clr_iterations + 1
+      k_set_value(self$model$optimizer$lr, self$clr())
+    },
+    on_epoch_end = function(epochs, logs) {
+      self$trn_epochs = self$trn_epochs + 1
     }
   )
 )
+
+
+assert_CyclicLR_init <- function(
+  base_lr,
+  max_lr,
+  step_size,
+  mode,
+  gamma,
+  scale_fn,
+  scale_mode
+) {
+
+  checkmate::assert_numeric(max_lr - base_lr, lower = 0)
+  checkmate::assert_integerish(step_size, lower = 1)
+  checkmate::assert_numeric(gamma)
+
+  if (is.null(scale_fn)) {
+    checkmate::assert_choice(mode,
+      choices = c("triangular", "triangular2", "exp_range")
+    )
+  } else {
+    checkmate::assert_function(scale_fn)
+  }
+  checkmate::assert_choice(scale_mode, choices = c("cycle", "iterations"))
+}
