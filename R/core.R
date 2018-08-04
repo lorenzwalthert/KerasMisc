@@ -3,7 +3,8 @@
 #' This callback implements a cyclical learning rate policy (CLR).
 #' The method cycles the learning rate between two boundaries with
 #' some constant frequency, as detailed in
-#' [this paper](https://arxiv.org/abs/1506.01186).
+#' [this paper](https://arxiv.org/abs/1506.01186). This implementation follows
+#' the [Python implementation](https://github.com/bckenstler/CLR) quite closey.
 #'
 #' @details
 #' The amplitude of the cycle can be scaled on a per-iteration or per-cycle
