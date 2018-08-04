@@ -24,7 +24,9 @@ Currently, the package features:
 
 * a Keras callback for cyclical learning rate scheduling as proposed by 
   [Smith (2017)](https://arxiv.org/abs/1506.01186), closely adapted from the 
-  [Python implementation](https://github.com/bckenstler/CLR).
+  [Python implementation](https://github.com/bckenstler/CLR). Please see the 
+  [README](https://github.com/bckenstler/CLR) from the Python 
+  implementation for details. It's really almost a 1:1 translation.
 
 
 ## Installation
