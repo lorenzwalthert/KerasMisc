@@ -4,5 +4,8 @@ language: R
 sudo: false
 cache: packages
 
+before_script:
+  - R -e 'keras::install_keras()'
+
 after_success:
   - Rscript -e 'covr::codecov()'
