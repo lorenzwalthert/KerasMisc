@@ -1,6 +1,7 @@
 #' Simple plotting utility
 #'
 #' @param callback_clr An object of class `CyclicLR`.
+#' @importFrom graphics plot
 #' @examples
 #' library(keras)
 #' dataset <- dataset_boston_housing()

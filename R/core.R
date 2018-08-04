@@ -36,7 +36,7 @@
 #'   start of cycle). Default is "cycle".
 #' @family callbacks
 #' @export
-#' @example
+#' @examples
 #' library(keras)
 #' dataset <- dataset_boston_housing()
 #' c(c(train_data, train_targets), c(test_data, test_targets)) %<-% dataset

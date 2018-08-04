@@ -2,4 +2,5 @@
 
 export(new_callback_cyclical_learning_rate)
 export(plot_clr_history)
+importFrom(graphics,plot)
 importFrom(utils,write.table)
