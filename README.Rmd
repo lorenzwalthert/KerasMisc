@@ -1,0 +1,30 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+# KerasMisc
+
+The goal of KerasMisc is to provide a collection of tools that enhance Keras. 
+Currently, this entails:
+
+* a Keras callback for cyclical learning rate scheduling, adopted from the 
+  [python implementation](https://github.com/bckenstler/CLR).
+
+
+## Installation
+
+You can install the development version of KerasMisc from GitHub with
+
+```{r, eval = FALSE}
+remotes::install_github("lorenzwalthert/KerasMisc")
+```

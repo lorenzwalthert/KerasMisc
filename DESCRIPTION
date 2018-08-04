@@ -1,0 +1,18 @@
+Package: KerasMisc
+Version: 0.0.0.9000
+Title: Add-ons for Keras
+Description: Enhances the R package Keras by providing additional tools like 
+    callbacks.
+Authors@R: person("Lorenz", "Walthert", , "lorenz.walthert@icloud.com", c("aut", "cre"))
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+ByteCompile: true
+Roxygen: list(
+    markdown = TRUE, 
+    roclets = c("rd", "namespace", "collate", "pkgapi::api_roclet")
+    )
+RoxygenNote: 6.1.0
+Imports: 
+    R6,
+    keras

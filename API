@@ -1,0 +1,5 @@
+# API for KerasMisc package
+
+## Exported functions
+
+new_callback_cyclical_learning_rate(base_lr = 0.001, max_lr = 0.006, step_size = 2000, mode = "triangular", gamma = 1, scale_fn = NULL, scale_mode = "cycle")
