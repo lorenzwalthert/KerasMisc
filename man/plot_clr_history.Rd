@@ -4,10 +4,22 @@
 \alias{plot_clr_history}
 \title{Simple plotting utility}
 \usage{
-plot_clr_history(callback_clr)
+plot_clr_history(callback_clr, granularity = "epoch",
+  backend = "ggplot2", trans_y_axis = "identity")
 }
 \arguments{
 \item{callback_clr}{An object of class \code{CyclicLR}.}
+
+\item{granularity}{Either "epoch" or "iteration". We advise to use epoch
+as we find it easier to work with. The plot will look very similar (except
+for the x-axis scaling) for both options as long as you choosed \code{step_size}
+in \code{\link[=new_callback_cyclical_learning_rate]{new_callback_cyclical_learning_rate()}} to be more iterations than
+one epoch has.}
+
+\item{backend}{Either "base" for base R or "ggplot2".}
+
+\item{trans_y_axis}{Value passed to \code{\link[gpglot2:scale_y_continuous]{gpglot2::scale_y_continuous()}} as the
+\code{trans} argument. Only supported for \code{backend = "ggplot2"}.}
 }
 \description{
 Simple plotting utility

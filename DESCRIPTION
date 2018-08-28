@@ -1,5 +1,5 @@
 Package: KerasMisc
-Version: 0.0.0.9000
+Version: 0.0.0.9001
 Title: Add-ons for Keras
 Description: Enhances the R package Keras by providing additional tools like 
     callbacks.
@@ -17,9 +17,12 @@ Imports:
     R6,
     keras,
     checkmate,
-    tensorflow
+    tensorflow,
+    graphics
 Suggests: 
     testthat,
-    covr
+    covr,
+    ggplot2 (>= 3.0.0),
+    vdiffr
 URL: https://github.com/lorenzwalthert/KerasMisc
 BugReports: https://github.com/lorenzwalthert/KerasMisc/issues

@@ -31,7 +31,8 @@ test_that("triangle", {
   callback_clr <- new_callback_cyclical_learning_rate(
     step_size = 6,
     base_lr = 0.001,
-    max_lr = 0.006
+    max_lr = 0.006,
+    verbose = 0
   )
   generate_model() %>% fit(
     train_data, train_targets,
@@ -42,7 +43,7 @@ test_that("triangle", {
   # plot_clr_history(callback_clr)
   expect_equal_to_reference(
     callback_clr$history,
-    test_path("reference-objects/log-triangle")
+    test_path("reference-objects/base-log-triangle")
   )
 })
 
@@ -51,7 +52,8 @@ test_that("triangle2", {
     step_size = 6,
     base_lr = 0.001,
     max_lr = 0.006,
-    mode = "triangular2"
+    mode = "triangular2",
+    verbose = 0
   )
   generate_model() %>% fit(
     train_data, train_targets,
@@ -62,7 +64,7 @@ test_that("triangle2", {
   # plot_clr_history(callback_clr)
   expect_equal_to_reference(
     callback_clr$history,
-    test_path("reference-objects/log-triangle2")
+    test_path("reference-objects/base-log-triangle2")
   )
 })
 
@@ -72,7 +74,8 @@ test_that("exp_range", {
     base_lr = 0.001,
     max_lr = 0.006,
     gamma = 0.99,
-    mode = "exp_range"
+    mode = "exp_range",
+    verbose = 0
   )
   generate_model() %>% fit(
     train_data, train_targets,
@@ -83,7 +86,7 @@ test_that("exp_range", {
   plot_clr_history(callback_clr)
   expect_equal_to_reference(
     callback_clr$history,
-    test_path("reference-objects/log-exp_range")
+    test_path("reference-objects/base-log-exp_range")
   )
 })
 
@@ -95,7 +98,8 @@ test_that("assertions", {
       base_lr = 0.001,
       max_lr = 0.006,
       gamma = 0.99,
-      mode = "exp_range"
+      mode = "exp_range",
+      verbose = 0
     ), ">= 1"
   )
 
@@ -104,7 +108,8 @@ test_that("assertions", {
     base_lr = 0.01,
     max_lr = 0.006,
     gamma = 0.99,
-    mode = "exp_range"
+    mode = "exp_range",
+    verbose = 0
   ), ">= 0")
 
   expect_error(new_callback_cyclical_learning_rate(
@@ -112,6 +117,7 @@ test_that("assertions", {
     base_lr = 0.001,
     max_lr = 0.006,
     gamma = 0.99,
-    mode = "abc"
+    mode = "abc",
+    verbose = 0
   ), "exp_range")
 })

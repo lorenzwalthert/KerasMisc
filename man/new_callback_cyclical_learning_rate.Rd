@@ -6,11 +6,12 @@
 \usage{
 new_callback_cyclical_learning_rate(base_lr = 0.001, max_lr = 0.006,
   step_size = 2000, mode = "triangular", gamma = 1,
-  scale_fn = NULL, scale_mode = "cycle")
+  scale_fn = NULL, scale_mode = "cycle", patience = Inf,
+  factor = 0.9, decrease_base_lr = TRUE, cooldown = 2, verbose = 1)
 }
 \arguments{
 \item{base_lr}{Initial learning rate which is the lower boundary in the
-lower boundary in the cycle.}
+cycle.}
 
 \item{max_lr}{Upper boundary in the cycle. Functionally, it defines the
 cycle amplitude (\code{max_lr - base_lr}). The learning rate at any cycle is
@@ -33,15 +34,39 @@ ignored.}
 \item{scale_mode}{Either "cycle" or "iterations". Defines whether \code{scale_fn}
 is evaluated on cycle number or cycle iterations (training iterations since
 start of cycle). Default is "cycle".}
+
+\item{patience}{The number of epochs of training without validation loss
+improvement that the callback will wait before it adjusts \code{base_lr} and
+\code{max_lr}.}
+
+\item{factor}{An numeric vector of lenght one which will scale \code{max_lr} and
+(if applicable according to \code{decrease_base_lr}) \code{base_lr}
+after \code{patience} epochs without improvement in the validation loss.}
+
+\item{decrease_base_lr}{Boolean indicating whether \code{base_lr} should also be
+scaled with \code{factor} or not.}
 }
 \description{
 This callback implements a cyclical learning rate policy (CLR).
 The method cycles the learning rate between two boundaries with
 some constant frequency, as detailed in
-\href{https://arxiv.org/abs/1506.01186}{this paper}. This implementation follows
-the \href{https://github.com/bckenstler/CLR}{Python implementation} quite closey.
+\href{https://arxiv.org/abs/1506.01186}{this paper}. In addition, the
+call-back supports scaled learning-rate bandwidths (see section
+'Differences to the Python implementation'). Note that this callback is
+very general as it can be used to specify:
 }
 \details{
+\itemize{
+\item constant learning rates.
+\item cyclical learning rates.
+\item decayling learning rates depending on validation loss such as
+\code{\link[keras:reduce_lr_on_plateau]{keras::reduce_lr_on_plateau()}}
+\item learning rates with scaled bandwidths.
+Apart from this, the
+implementation follows the
+\href{https://github.com/bckenstler/CLR}{Python implementation} quite closey.
+}
+
 The amplitude of the cycle can be scaled on a per-iteration or per-cycle
 basis. This class has three built-in policies, as put forth in the paper.
 \itemize{
@@ -54,6 +79,30 @@ iterations) at each cycle iteration.
 
 For more details, please see paper.
 }
+\section{Differences to Python implementation}{
+
+This implementation differs from the
+\href{https://github.com/bckenstler/CLR}{Python implementation} in the following
+aspects:
+\itemize{
+\item \emph{scaled learning-rate bandwidth on plateau} is supported. Via the
+arguments \code{patience}, \code{factor} and \code{decrease_base_lr}, the user has
+control over if and when the boundaries of the learning rate are adjusted.
+This feature allows to combine decaying learning rates with cyclical
+learning rates. Typically, one wants to reduce the learning rate bandwith
+after validation loss has stopped improving for some time.
+Note that both \code{factor < 1} and \code{patience < Inf} must hold
+in order for this feature to take effect.
+\item The \code{history} dataframe in the return value of this callback has a column
+\code{epochs} in addition to \code{itterations} and \code{lr}.
+\item The callback returns a \code{history_epoch} dataframe that just contains the
+epochs and the learning rates at the end of the epoch. This is less
+granular than the \code{history} element.
+\item All column names in \code{history} and \code{history_epoch} are - opposed to the
+Python implementation - in singular.
+}
+}
+
 \examples{
 library(keras)
 dataset <- dataset_boston_housing()
