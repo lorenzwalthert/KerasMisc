@@ -45,6 +45,11 @@ after \code{patience} epochs without improvement in the validation loss.}
 
 \item{decrease_base_lr}{Boolean indicating whether \code{base_lr} should also be
 scaled with \code{factor} or not.}
+
+\item{cooldown}{Number of epochs to wait before resuming normal operation
+after learning rate has been reduced.}
+
+\item{verbose}{Currently supporting 0 (silent) and 1 (verbose).}
 }
 \description{
 This callback implements a cyclical learning rate policy (CLR).
@@ -60,7 +65,7 @@ very general as it can be used to specify:
 \item constant learning rates.
 \item cyclical learning rates.
 \item decayling learning rates depending on validation loss such as
-\code{\link[keras:reduce_lr_on_plateau]{keras::reduce_lr_on_plateau()}}
+\code{\link[keras:callback_reduce_lr_on_plateau]{keras::callback_reduce_lr_on_plateau()}}
 \item learning rates with scaled bandwidths.
 Apart from this, the
 implementation follows the
@@ -141,6 +146,6 @@ model \%>\% fit(
   callbacks = list(callback_clr)
 )
 callback_clr$history
-plot_clr_history(callback_clr)
+plot_clr_history(callback_clr, backend = "base")
 }
 \concept{callbacks}

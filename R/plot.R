@@ -7,7 +7,7 @@
 #'   in [new_callback_cyclical_learning_rate()] to be more iterations than
 #'   one epoch has.
 #' @param backend Either "base" for base R or "ggplot2".
-#' @param trans_y_axis Value passed to [gpglot2::scale_y_continuous()] as the
+#' @param trans_y_axis Value passed to [ggplot2::scale_y_continuous()] as the
 #'   `trans` argument. Only supported for `backend = "ggplot2"`.
 #' @importFrom graphics plot
 #' @examples
@@ -48,9 +48,7 @@
 #'   callbacks = list(callback_clr)
 #' )
 #' callback_clr$history
-#' plot_clr_history(callback_clr)
-#' @importFrom ggplot2 ggplot aes geom_point geom_line scale_color_manual ylab
-#' @importFrom ggplot2 scale_y_continuous
+#' plot_clr_history(callback_clr, backend = "base")
 #' @export
 plot_clr_history <- function(callback_clr,
                              granularity = "epoch",
@@ -75,28 +73,29 @@ plot_clr_history <- function(callback_clr,
   }
 }
 
-#' @importFrom rlang !! sym
+#' @importFrom rlang !! sym .data
 plot_clr_history_ggplot2 <- function(callback_clr,
                                             granularity = "epoch",
                                             trans_y_axis) {
   x <- sym(granularity)
   data <- dispatch_granularity(callback_clr, granularity)
-  ggplot() +
-    geom_line(aes(x = !!x, max_lr, color = "max_lr"),
+  ggplot2::ggplot() +
+    ggplot2::geom_line(ggplot2::aes(x = !!x, .data$max_lr, color = "max_lr"),
               data = data
     ) +
-    geom_line(aes(x = !!x, lr, color = "lr"),
+    ggplot2::geom_line(ggplot2::aes(x = !!x, .data$lr, color = "lr"),
               data = data
     ) +
-    geom_line(aes(x = !!x, base_lr, color = "base_lr"),
+    ggplot2::geom_line(ggplot2::aes(x = !!x, .data$base_lr, color = "base_lr"),
               data = data
     ) +
-    scale_color_manual(
+    ggplot2::scale_color_manual(
       breaks = c("max_lr", "lr", "base_lr"),
       values = c("gray20", "green", "gray20"),
       name = ""
     ) +
-    ylab("") + scale_y_continuous(trans = trans_y_axis)
+    ggplot2::ylab("") +
+    ggplot2::scale_y_continuous(trans = trans_y_axis)
 
 }
 

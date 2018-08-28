@@ -80,7 +80,7 @@ test_that("triangle2", {
   )
   # plotting
   vdiffr::expect_doppelganger(
-    "shifting-with-base-triangular2", plot_clr_history(callback_clr)
+    "shifting-log-triangular2", plot_clr_history(callback_clr)
   )
 })
 

@@ -18,7 +18,8 @@ Imports:
     keras,
     checkmate,
     tensorflow,
-    graphics
+    graphics,
+    rlang
 Suggests: 
     testthat,
     covr,

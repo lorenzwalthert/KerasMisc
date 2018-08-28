@@ -11,7 +11,7 @@
 #' * constant learning rates.
 #' * cyclical learning rates.
 #' * decayling learning rates depending on validation loss such as
-#'   [keras::reduce_lr_on_plateau()]
+#'   [keras::callback_reduce_lr_on_plateau()]
 #' * learning rates with scaled bandwidths.
 #' Apart from this, the
 #' implementation follows the
@@ -73,6 +73,9 @@
 #'   after `patience` epochs without improvement in the validation loss.
 #' @param decrease_base_lr Boolean indicating whether `base_lr` should also be
 #'   scaled with `factor` or not.
+#' @param cooldown Number of epochs to wait before resuming normal operation
+#'   after learning rate has been reduced.
+#' @param verbose Currently supporting 0 (silent) and 1 (verbose).
 #' @family callbacks
 #' @export
 #' @examples
@@ -113,7 +116,7 @@
 #'   callbacks = list(callback_clr)
 #' )
 #' callback_clr$history
-#' plot_clr_history(callback_clr)
+#' plot_clr_history(callback_clr, backend = "base")
 new_callback_cyclical_learning_rate <- function(base_lr = 0.001,                                                 max_lr = 0.006,
                                                 step_size = 2000,
                                                 mode = "triangular",
@@ -352,13 +355,13 @@ assert_CyclicLR_init <- function(
   verbose
 ) {
 
-  checkmate::assert_numeric(max_lr - base_lr, lower = 0)
-  checkmate::assert_integerish(step_size, lower = 1)
-  checkmate::assert_numeric(gamma)
-  checkmate::assert_integerish(patience)
-  checkmate::assert_numeric(factor)
+  checkmate::assert_number(max_lr - base_lr, lower = 0)
+  checkmate::assert_number(step_size, lower = 1)
+  checkmate::assert_number(gamma)
+  checkmate::assert_number(patience)
+  checkmate::assert_number(factor)
   checkmate::assert_logical(decrease_base_lr)
-  checkmate::assert_integerish(cooldown, lower = 0)
+  checkmate::assert_number(cooldown, lower = 0)
   checkmate::assert_integerish(verbose, lower = 0)
   if (is.null(scale_fn)) {
     checkmate::assert_choice(mode,

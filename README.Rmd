@@ -93,7 +93,8 @@ head(callback_clr$history)
 
 The colors in the plot mark the different epochs whereas:
 ```{r plot-clr}
-plot_clr_history(callback_clr)
+backend <- ifelse(rlang::is_installed("ggplot2"), "ggplot2", "base") 
+plot_clr_history(callback_clr, backend = backend)
 
 ```
 

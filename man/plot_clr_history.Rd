@@ -18,7 +18,7 @@ one epoch has.}
 
 \item{backend}{Either "base" for base R or "ggplot2".}
 
-\item{trans_y_axis}{Value passed to \code{\link[gpglot2:scale_y_continuous]{gpglot2::scale_y_continuous()}} as the
+\item{trans_y_axis}{Value passed to \code{\link[ggplot2:scale_y_continuous]{ggplot2::scale_y_continuous()}} as the
 \code{trans} argument. Only supported for \code{backend = "ggplot2"}.}
 }
 \description{
@@ -62,5 +62,5 @@ model \%>\% fit(
   callbacks = list(callback_clr)
 )
 callback_clr$history
-plot_clr_history(callback_clr)
+plot_clr_history(callback_clr, backend = "base")
 }
