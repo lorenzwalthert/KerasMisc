@@ -78,9 +78,5 @@ test_that("triangle2", {
     callback_clr$history,
     test_path("reference-objects/shifted-log-triangle2")
   )
-  # plotting
-  vdiffr::expect_doppelganger(
-    "shifting-log-triangular2", plot_clr_history(callback_clr)
-  )
 })
 
