@@ -1,7 +1,7 @@
 context("test-plotting")
 library(vdiffr)
 test_that("plotting works", {
-  skip_if(Sys.getenv("R_VERSION_TYPE" == "devel"))
+  skip_if(Sys.getenv("R_VERSION_TYPE") == "devel")
   # on devel, somehow, the plots look a bit different
   callback_clr <- readRDS(test_path("reference-objects/callback-clr-for-plotting"))
   expect_doppelganger("epoch-ggplot2", plot_clr_history(callback_clr))
