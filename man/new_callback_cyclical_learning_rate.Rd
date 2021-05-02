@@ -4,10 +4,20 @@
 \alias{new_callback_cyclical_learning_rate}
 \title{Initiate a new cyclical learning rate scheduler}
 \usage{
-new_callback_cyclical_learning_rate(base_lr = 0.001, max_lr = 0.006,
-  step_size = 2000, mode = "triangular", gamma = 1,
-  scale_fn = NULL, scale_mode = "cycle", patience = Inf,
-  factor = 0.9, decrease_base_lr = TRUE, cooldown = 2, verbose = 1)
+new_callback_cyclical_learning_rate(
+  base_lr = 0.001,
+  max_lr = 0.006,
+  step_size = 2000,
+  mode = "triangular",
+  gamma = 1,
+  scale_fn = NULL,
+  scale_mode = "cycle",
+  patience = Inf,
+  factor = 0.9,
+  decrease_base_lr = TRUE,
+  cooldown = 2,
+  verbose = 1
+)
 }
 \arguments{
 \item{base_lr}{Initial learning rate which is the lower boundary in the
@@ -25,10 +35,10 @@ suggest setting step_size \code{2-8} x training iterations in epoch.}
 "triangular". Values correspond to policies detailed above. If \code{scale_fn}
 is not \code{NULL}, this argument is ignored.}
 
-\item{gamma}{Constant in \code{exp_range} scaling function: \code{gamma^(cycle iterations)}}
+\item{gamma}{Constant in \code{exp_range} scaling function: \verb{gamma^(cycle iterations)}}
 
 \item{scale_fn}{Custom scaling policy defined by a single argument anonymous
-function, where \code{0 <= scale_fn(x) <= 1} for all \code{x >= 0}. Mode paramater is
+function, where \verb{0 <= scale_fn(x) <= 1} for all \code{x >= 0}. Mode paramater is
 ignored.}
 
 \item{scale_mode}{Either "cycle" or "iterations". Defines whether \code{scale_fn}
@@ -37,7 +47,8 @@ start of cycle). Default is "cycle".}
 
 \item{patience}{The number of epochs of training without validation loss
 improvement that the callback will wait before it adjusts \code{base_lr} and
-\code{max_lr}.}
+\code{max_lr}. Requires a \code{validation_data} to be passed in the \code{\link[keras:reexports]{keras::fit()}}
+call if set to something else than \code{Inf}.}
 
 \item{factor}{An numeric vector of lenght one which will scale \code{max_lr} and
 (if applicable according to \code{decrease_base_lr}) \code{base_lr}
