@@ -41,7 +41,7 @@ test_that("triangle", {
     callbacks = list(callback_clr)
   )
   # plot_clr_history(callback_clr)
-  expect_equal_to_reference(
+  expect_known_value(
     callback_clr$history,
     test_path("reference-objects/base-log-triangle")
   )
@@ -62,7 +62,7 @@ test_that("triangle2", {
     callbacks = list(callback_clr)
   )
   # plot_clr_history(callback_clr)
-  expect_equal_to_reference(
+  expect_known_value(
     callback_clr$history,
     test_path("reference-objects/base-log-triangle2")
   )
@@ -84,7 +84,7 @@ test_that("exp_range", {
     callbacks = list(callback_clr)
   )
   plot_clr_history(callback_clr)
-  expect_equal_to_reference(
+  expect_known_value(
     callback_clr$history,
     test_path("reference-objects/base-log-exp_range")
   )
