@@ -67,6 +67,7 @@ jobs:
       - name: Install dependencies
         run: |
           remotes::install_deps(dependencies = TRUE)
+          reticulate::install_miniconda()
           keras::install_keras()
           remotes::install_cran("rcmdcheck")
         shell: Rscript {0}
