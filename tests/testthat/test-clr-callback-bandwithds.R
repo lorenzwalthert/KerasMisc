@@ -1,7 +1,7 @@
 context("test-cyclical-learning-rate-callback-shifting-bandwidths")
 
 library(keras)
-tensorflow::use_session_with_seed(4)
+tensorflow::set_random_seed(4)
 dataset <- dataset_boston_housing()
 c(c(train_data, train_targets), c(test_data, test_targets)) %<-% dataset
 
