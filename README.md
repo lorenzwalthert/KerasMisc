@@ -1,5 +1,9 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+<!-- badges: start -->
+
+[![R-CMD-check](https://github.com/lorenzwalthert/KerasMisc/workflows/R-CMD-check/badge.svg)](https://github.com/lorenzwalthert/KerasMisc/actions)
+<!-- badges: end -->
 
 [![lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 [![Travis build
@@ -12,11 +16,11 @@ status](https://codecov.io/gh/lorenzwalthert/KerasMisc/branch/master/graph/badge
 The goal of KerasMisc is to provide a collection of tools that enhance
 the R implementation of Keras. Currently, the package features:
 
-  - a Keras callback for cyclical learning rate scheduling as proposed
+-   a Keras callback for cyclical learning rate scheduling as proposed
     by [Smith (2017)](https://arxiv.org/abs/1506.01186), closely adapted
     from the [Python implementation](https://github.com/bckenstler/CLR)
     and then extended so they the bands are scaled by a constant factor
-    (typically \< 1) after the validation loss has not improved for a
+    (typically &lt; 1) after the validation loss has not improved for a
     while. For details, see the
     [README](https://github.com/bckenstler/CLR) from the Python
     implementation and the example below for dynamically adjusting

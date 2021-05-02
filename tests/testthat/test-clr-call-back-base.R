@@ -1,7 +1,7 @@
 context("test-cyclical-learning-rate-callback.R")
 
 library(keras)
-tensorflow::use_session_with_seed(4)
+tensorflow::set_random_seed(4)
 dataset <- dataset_boston_housing()
 c(c(train_data, train_targets), c(test_data, test_targets)) %<-% dataset
 
@@ -41,7 +41,7 @@ test_that("triangle", {
     callbacks = list(callback_clr)
   )
   # plot_clr_history(callback_clr)
-  expect_equal_to_reference(
+  expect_known_value(
     callback_clr$history,
     test_path("reference-objects/base-log-triangle")
   )
@@ -62,7 +62,7 @@ test_that("triangle2", {
     callbacks = list(callback_clr)
   )
   # plot_clr_history(callback_clr)
-  expect_equal_to_reference(
+  expect_known_value(
     callback_clr$history,
     test_path("reference-objects/base-log-triangle2")
   )
@@ -84,7 +84,7 @@ test_that("exp_range", {
     callbacks = list(callback_clr)
   )
   plot_clr_history(callback_clr)
-  expect_equal_to_reference(
+  expect_known_value(
     callback_clr$history,
     test_path("reference-objects/base-log-exp_range")
   )
@@ -120,4 +120,36 @@ test_that("assertions", {
     mode = "abc",
     verbose = 0
   ), "exp_range")
+})
+
+
+test_that("proper handling when validation data is missing", {
+  callback_clr <- new_callback_cyclical_learning_rate(
+    step_size = 6,
+    base_lr = 0.001,
+    max_lr = 0.006,
+    verbose = 0
+  )
+  expect_error(
+    fit(generate_model(),
+      train_data, train_targets,
+      epochs = 2, verbose = 0,
+      callbacks = list(callback_clr)
+    ), NA
+  )
+
+
+  callback_clr <- new_callback_cyclical_learning_rate(
+    step_size = 6,
+    base_lr = 0.001,
+    max_lr = 0.006,
+    verbose = 0, patience = 4
+  )
+  expect_error(
+    fit(generate_model(),
+      train_data, train_targets,
+      epochs = 2, verbose = 0,
+      callbacks = list(callback_clr)
+    ), "`validation_data`"
+  )
 })

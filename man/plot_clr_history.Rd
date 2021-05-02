@@ -4,8 +4,12 @@
 \alias{plot_clr_history}
 \title{Simple plotting utility}
 \usage{
-plot_clr_history(callback_clr, granularity = "epoch",
-  backend = "ggplot2", trans_y_axis = "identity")
+plot_clr_history(
+  callback_clr,
+  granularity = "epoch",
+  backend = "ggplot2",
+  trans_y_axis = "identity"
+)
 }
 \arguments{
 \item{callback_clr}{An object of class \code{CyclicLR}.}
@@ -18,7 +22,7 @@ one epoch has.}
 
 \item{backend}{Either "base" for base R or "ggplot2".}
 
-\item{trans_y_axis}{Value passed to \code{\link[ggplot2:scale_y_continuous]{ggplot2::scale_y_continuous()}} as the
+\item{trans_y_axis}{Value passed to \code{\link[ggplot2:scale_continuous]{ggplot2::scale_y_continuous()}} as the
 \code{trans} argument. Only supported for \code{backend = "ggplot2"}.}
 }
 \description{

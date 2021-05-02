@@ -1,7 +1,7 @@
 context("test-cyclical-learning-rate-callback-shifting-bandwidths")
 
 library(keras)
-tensorflow::use_session_with_seed(4)
+tensorflow::set_random_seed(4)
 dataset <- dataset_boston_housing()
 c(c(train_data, train_targets), c(test_data, test_targets)) %<-% dataset
 
@@ -45,7 +45,7 @@ test_that("triangle", {
     callbacks = list(callback_clr)
   )
   # plot_clr_history(callback_clr)
-  expect_equal_to_reference(
+  expect_known_value(
     callback_clr$history,
     test_path("reference-objects/shifted-triangle-iteration")
   )
@@ -54,7 +54,7 @@ test_that("triangle", {
       as.matrix(readRDS(test_path("reference-objects/shifted-triangle-epoch")))
     ), 0.04
   )
-  saveRDS(callback_clr, test_path("reference-objects/callback-clr-for-plotting"))
+  # saveRDS(callback_clr, test_path("reference-objects/callback-clr-for-plotting"))
 })
 
 test_that("triangle2", {
@@ -75,7 +75,7 @@ test_that("triangle2", {
   )
   plot(history)
   # plot_clr_history(callback_clr)
-  expect_equal_to_reference(
+  expect_known_value(
     callback_clr$history,
     test_path("reference-objects/shifted-log-triangle2")
   )

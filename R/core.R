@@ -67,7 +67,8 @@
 #'   start of cycle). Default is "cycle".
 #' @param patience The number of epochs of training without validation loss
 #'   improvement that the callback will wait before it adjusts `base_lr` and
-#'   `max_lr`.
+#'   `max_lr`. Requires a `validation_data` to be passed in the [keras::fit()]
+#'   call if set to something else than `Inf`.
 #' @param factor An numeric vector of lenght one which will scale `max_lr` and
 #'   (if applicable according to `decrease_base_lr`) `base_lr`
 #'   after `patience` epochs without improvement in the validation loss.
@@ -117,7 +118,7 @@
 #' )
 #' callback_clr$history
 #' plot_clr_history(callback_clr, backend = "base")
-new_callback_cyclical_learning_rate <- function(base_lr = 0.001,                                                 max_lr = 0.006,
+new_callback_cyclical_learning_rate <- function(base_lr = 0.001, max_lr = 0.006,
                                                 step_size = 2000,
                                                 mode = "triangular",
                                                 gamma = 1,
@@ -127,8 +128,7 @@ new_callback_cyclical_learning_rate <- function(base_lr = 0.001,                
                                                 factor = 0.9,
                                                 decrease_base_lr = TRUE,
                                                 cooldown = 2,
-                                                verbose = 1
-                                                ) {
+                                                verbose = 1) {
   CyclicLR$new(
     base_lr = base_lr,
     max_lr = max_lr,
@@ -180,7 +180,6 @@ CyclicLR <- R6::R6Class("CyclicLR",
                           decrease_base_lr = TRUE,
                           cooldown = 0,
                           verbose = 1) {
-
       assert_CyclicLR_init(
         base_lr,
         max_lr,
@@ -230,11 +229,9 @@ CyclicLR <- R6::R6Class("CyclicLR",
       self$verbose <- verbose
       self$.reset()
     },
-
     .reset = function(new_base_lr = NULL,
                       new_max_lr = NULL,
                       new_step_size = NULL) {
-
       if (!is.null(new_base_lr)) {
         self$base_lr <- new_base_lr
       }
@@ -253,9 +250,8 @@ CyclicLR <- R6::R6Class("CyclicLR",
       if (self$scale_mode == "cycle") {
         self$base_lr +
           (self$max_lr - self$base_lr) *
-          max(0, (1 - x)) *
-          self$scale_fn(cycle)
-
+            max(0, (1 - x)) *
+            self$scale_fn(cycle)
       } else {
         self$base_lr +
           (self$max_lr - self$base_lr) * max(0, (1 - x)) * self$scale_fn(self$clr_iteration)
@@ -264,7 +260,6 @@ CyclicLR <- R6::R6Class("CyclicLR",
     in_cooldown = function() {
       self$cooldown_counter > 0
     },
-
     on_train_begin = function(logs) {
       if (self$clr_iteration == 0) {
         k_set_value(self$model$optimizer$lr, self$base_lr)
@@ -288,20 +283,31 @@ CyclicLR <- R6::R6Class("CyclicLR",
       k_set_value(self$model$optimizer$lr, self$clr())
     },
     on_epoch_end = function(epochs, logs = list()) {
-      self$trn_epochs = self$trn_epochs + 1
-      best <- ifelse(nrow(self$history_epoch) > 0,
-                     min(self$history_epoch$val_loss),
-                     logs$val_loss
-      )
-      if(logs$val_loss > best) {
+      self$trn_epochs <- self$trn_epochs + 1
+      if ("val_loss" %in% names(logs)) {
+        best <- ifelse(nrow(self$history_epoch) > 0,
+          min(self$history_epoch$val_loss),
+          logs$val_loss
+        )
+        if (logs$val_loss > best) {
+          self$not_improved_for_n_times <- self$not_improved_for_n_times + 1
+        } else {
+          self$not_improved_for_n_times <- 0
+        }
+      } else if (is.infinite(self$patience)) {
         self$not_improved_for_n_times <- self$not_improved_for_n_times + 1
       } else {
-        self$not_improved_for_n_times <- 0
+        stop(
+          "`patience` must be `Inf`, if no `validation_data` is supplied ",
+          "because validation data set metrics can't be computed",
+          call. = FALSE
+        )
       }
       self$history_epoch <- rbind(
         self$history_epoch,
         as.data.frame(do.call(cbind, c(
-          logs, epoch = epochs,
+          logs,
+          epoch = epochs,
           not_improved_for_n_times = self$not_improved_for_n_times,
           base_lr = self$base_lr, max_lr = self$max_lr,
           lr = k_get_value(self$model$optimizer$lr),
@@ -318,7 +324,7 @@ CyclicLR <- R6::R6Class("CyclicLR",
           if (self$verbose > 0) {
             cat("Adjusting base_lr to ", self$base_lr, ".\n", sep = "")
           }
-          self$base_lr <-  self$factor * self$base_lr
+          self$base_lr <- self$factor * self$base_lr
           self$cooldown_counter <- self$cooldown
         }
         candidate_max_lr <- self$factor * self$max_lr
@@ -340,21 +346,18 @@ CyclicLR <- R6::R6Class("CyclicLR",
 )
 
 
-assert_CyclicLR_init <- function(
-  base_lr,
-  max_lr,
-  step_size,
-  mode,
-  gamma,
-  scale_fn,
-  scale_mode,
-  patience,
-  factor,
-  decrease_base_lr,
-  cooldown,
-  verbose
-) {
-
+assert_CyclicLR_init <- function(base_lr,
+                                 max_lr,
+                                 step_size,
+                                 mode,
+                                 gamma,
+                                 scale_fn,
+                                 scale_mode,
+                                 patience,
+                                 factor,
+                                 decrease_base_lr,
+                                 cooldown,
+                                 verbose) {
   checkmate::assert_number(max_lr - base_lr, lower = 0)
   checkmate::assert_number(step_size, lower = 1)
   checkmate::assert_number(gamma)

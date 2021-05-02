@@ -12,7 +12,7 @@ Roxygen: list(
     markdown = TRUE, 
     roclets = c("rd", "namespace", "collate", "pkgapi::api_roclet")
     )
-RoxygenNote: 6.1.0
+RoxygenNote: 7.1.1.9001
 Imports: 
     R6,
     keras,
