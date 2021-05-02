@@ -6,3 +6,4 @@
 ^README\.Rmd$
 ^API$
 ^KerasMisc\.Rproj$
+^\.github$
