@@ -121,3 +121,35 @@ test_that("assertions", {
     verbose = 0
   ), "exp_range")
 })
+
+
+test_that("proper handling when validation data is missing", {
+  callback_clr <- new_callback_cyclical_learning_rate(
+    step_size = 6,
+    base_lr = 0.001,
+    max_lr = 0.006,
+    verbose = 0
+  )
+  expect_error(
+    fit(generate_model(),
+      train_data, train_targets,
+      epochs = 2, verbose = 0,
+      callbacks = list(callback_clr)
+    ), NA
+  )
+
+
+  callback_clr <- new_callback_cyclical_learning_rate(
+    step_size = 6,
+    base_lr = 0.001,
+    max_lr = 0.006,
+    verbose = 0, patience = 4
+  )
+  expect_error(
+    fit(generate_model(),
+      train_data, train_targets,
+      epochs = 2, verbose = 0,
+      callbacks = list(callback_clr)
+    ), "`validation_data`"
+  )
+})
